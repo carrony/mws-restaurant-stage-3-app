@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="theme-color" content="#3397DB">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Restaurant Info</title>
+
+  <!-- Normalize.css for better cross-browser consistency -->
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <!-- Main CSS file -->
+  <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="manifest" href="/manifest.json">
+
+</head>
+
+<body class="inside">
+  <!-- Beginning header -->
+  <header>
+    <!-- Beginning nav -->
+    <nav>
+      <h1><a href="/"><img src="img/icon.svg" alt="Home" id="logo">Restaurant Reviews</a></h1>
+    </nav>
+    <!-- Beginning breadcrumb -->
+    <!-- The backgroung must be in the nav element-->
+    <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+        <ol id="breadcrumb" >
+            <li><a href="/">Home</a></li>
+        </ol>
+    </nav>
+
+    <!-- End breadcrumb -->
+    <!-- End nav -->
+  </header>
+  <!-- End header -->
+
+  <!-- Beginning main -->
+  <main id="maincontent">
+    <!-- For skkiping the maps controls-->
+    <a href="#restaurant-container" class="skip-link">Skip map</a>
+    <!-- Beginning map -->
+    <section id="map-container">
+      <div id="map" aria-label="Location Map"></div>
+    </section>
+    <!-- End map -->
+    <!-- Beginning restaurant -->
+    <section id="restaurant-container" tabindex="-1">
+      <h2 id="restaurant-name"></h2>
+      <img id="restaurant-img">
+      <p id="restaurant-cuisine"></p>
+      <p id="restaurant-address"></p>
+      <a href="#reviews-container" class="skip-link" >Skip opening timeteable hours</a>
+      <table id="restaurant-hours">
+      </table>
+    </section>
+    <!-- end restaurant -->
+    <!-- Beginning reviews -->
+    <section id="reviews-container" tabindex="-1">
+      <ul id="reviews-list"></ul>
+    </section>
+    <!-- End reviews -->
+  </main>
+  <!-- End main -->
+
+  <!-- Beginning footer -->
+  <footer id="footer">
+    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
+  <!-- End footer -->
+
+  <!-- Beginning scripts -->
+  <!-- idb promised -->
+  <!-- <script type="text/javascript" src="js/idb.js"></script> -->
+  <!-- Database helpers -->
+  <!-- <script type="text/javascript" src="js/dbhelper.js"></script> -->
+  <!-- Minified js libraries -->
+  <script type="text/javascript" src="js/all.js"></script>
+  <!-- Main javascript file -->
+  <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <!-- Google Maps -->
+  <!-- Service worker registering-->
+  <!-- <script type="application/javascript" charset="utf-8" src="js/sw_register.js"></script> -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHX0921RbEIR7guTs60CYfU4mk1b_GBF4&libraries=places&callback=initMap"></script>
+  <!-- End scripts -->
+
+</body>
+
+</html>

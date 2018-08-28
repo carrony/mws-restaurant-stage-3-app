@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#3397DB">
+  <title>Restaurant Reviews</title>
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="/manifest.json">
+
+</head>
+
+<body>
+  <header>
+    <nav>
+      <h1><a href="/"> <img src="img/icon.svg" alt="Home" id="logo"> Restaurant Reviews</a></h1>
+    </nav>
+  </header>
+
+  <main id="maincontent">
+    <!-- For skkiping the maps controls-->
+    <a href="#filtering" class="skip-link">Skip map</a>
+    <section id="map-container">
+      <div id="map"></div>
+    </section>
+    <section>
+      <div class="filter-options" id="#filtering" tabindex="-1" role="search">
+        <h2>Filter Results</h2>
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Select neighborhoods">
+          <option value="all">All Neighborhoods</option>
+        </select>
+        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Select cuisines">
+          <option value="all">All Cuisines</option>
+        </select>
+      </div>
+      <ul id="restaurants-list"></ul>
+    </section>
+  </main>
+
+    <!-- idb promised -->
+  <!--<script type="text/javascript" src="js/idb.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/sw_register.js"></script>-->
+  <script type="text/javascript" src="js/all.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHX0921RbEIR7guTs60CYfU4mk1b_GBF4&libraries=places&callback=initMap"></script>
+
+
+
+  <footer id="footer" tabindex="0">
+    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
+
+</body>
+
+</html>

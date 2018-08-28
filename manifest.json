@@ -1,0 +1,35 @@
+{
+    "short_name": "RestaurantRv",
+    "name": "Find your restaurant through the opinions",
+    "icons": [
+      {
+        "src": "img/icon64px.png",
+        "type": "image/png",
+        "sizes": "64x64"
+      },
+      {
+        "src": "img/icon128px.png",
+        "type": "image/png",
+        "sizes": "128x128"
+      },
+      {
+        "src": "img/icon192px.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "img/icon256px.png",
+        "type": "image/png",
+        "sizes": "256x256"
+      },
+      {
+        "src": "img/icon512px.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "index.html",
+    "background_color": "#3397DB",
+    "display": "standalone",
+    "theme_color": "#3397DB"
+  }

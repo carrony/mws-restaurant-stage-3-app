@@ -337,7 +337,7 @@ nav h1 a {
   padding: 0;
 }
 
-#reviews-list li {
+#reviews-list li, #form-container {
   background-color: #fff;
   border: 2px solid #f3f3f3;
   display: block;
@@ -351,7 +351,7 @@ nav h1 a {
   width: 100%;
 }
 
-#reviews-list li p {
+#reviews-list li p, #form-container h3 {
   padding: 10px 30px 5px;
 }
 
@@ -393,9 +393,77 @@ nav h1 a {
 
 /* Rounded borders */
 #reviews-list li,
-#restaurant-img {
+#restaurant-img,
+#form-container {
   border-radius: 30px 0;
 }
+
+/* Review form */
+#form-container h3 {
+  background-color: #252831;
+  color: #fff;
+}
+
+#form-container label {
+  width: calc(30% - 15px);
+  display: inline-block;
+  margin: 0px 0px 15px 0px;
+}
+
+/*
+#form-container {
+  padding: 20px 12px 10px 20px;
+}*/
+
+#form-container li {
+  padding: 0;
+  display: block;
+  list-style: none;
+  margin: 10px 0 0 0;
+  padding-right: 20px
+}/*
+
+#form-container label{
+  margin:0 0 3px 0;
+  padding:0px;
+  display:block;
+  font-weight: bold;
+}*/
+
+#form-container input[type=text],
+#form-container input[type=number],
+#form-container input[type=textarea] {
+  box-sizing: border-box;
+  border:1px solid #BEBEBE;
+  padding: 7px;
+  margin:0px;
+  transition: all 0.30s ease-in-out;
+  outline: none;
+  width: calc(70% - 20px);
+}
+
+#form-container input[type=textarea] {
+  height:100px;
+}
+
+#form-container input[type=text]:focus,
+#form-container input[type=number]:focus,
+#form-container input[type=textarea]:focus {
+    box-shadow: 0 0 8px orange;
+    border: 1px solid orange;
+}
+
+.form-button{
+  background: orange;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 8px 15px 8px 15px;
+  border: none;
+  color: #fff;
+  display:block;
+  margin: 0 auto 0 auto;
+}
+
 
 /*  ====================== Responsive Grid ====================== */
 /* TODO: Add responsive behavior for table */
@@ -478,6 +546,19 @@ nav h1 a {
   #restaurant-hours td {
     font-size: 16px;
   }
+
+  #form-container label {
+    width: calc(100% - 15px);
+    display: block;
+  }
+
+  #form-container input[type=text],
+  #form-container input[type=number],
+  #form-container input[type=textarea] {
+    width: calc(100% - 20px);
+  }
+
+
 }
 
 @media screen and (min-width: 800px) {
@@ -504,6 +585,17 @@ nav h1 a {
 
   .split-hour:not(:last-child)::after {
     content: ', ';
+  }
+
+  #form-container label {
+    width: calc(30% - 15px);
+    display: inline-block;
+  }
+
+  #form-container input[type=text],
+  #form-container input[type=number],
+  #form-container input[type=textarea] {
+    width: calc(70% - 20px);
   }
 }
 

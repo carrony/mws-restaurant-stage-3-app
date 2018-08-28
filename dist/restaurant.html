@@ -58,6 +58,33 @@
     <!-- Beginning reviews -->
     <section id="reviews-container" tabindex="-1">
       <ul id="reviews-list"></ul>
+
+
+      <div id="form-container">
+        <h3>Add yor own Review!</h3>
+        <form method="POST" action="">
+            <input type="hidden" aria-hidden="true" name="restaurant_id" id="restaurant_id">
+          <ul>
+            <li>
+              <label for="name"> Name: </label>
+              <input type="text" name="name" aria-label="Introduce your name:">
+            </li>
+            <li>
+                <label for="rating"> Rating: </label>
+                <input type="number" name="rating" aria-label="Rate it:">
+            </li>
+            <li>
+                <label for="comments"> Comments: </label>
+                <input type="textarea" name="comments" aria-label="Introduce your comments:">
+            </li>
+            <li>
+                <input type="submit" type="submit" class="form-button" value="Grab Your review!" aria-label="Grab Your review!">
+            </li>
+          </ul>
+
+        </form>
+      </div>
+
     </section>
     <!-- End reviews -->
   </main>

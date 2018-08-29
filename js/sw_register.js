@@ -8,6 +8,11 @@ if (navigator.serviceWorker) {
     }).catch(function(err) {
         console.log('error registering...');
     });
+
+    navigator.serviceWorker.ready.then(function(swRegistration) {
+        return swRegistration.sync.register('sendPendingPost');
+      });
+
 }
 
 

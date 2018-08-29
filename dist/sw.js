@@ -1,3 +1,5 @@
+importScripts('/js/all.js');
+
 let staticCacheName = 'reviews-static-v1';
 let contentImgsCache = 'reviews-content-imgs';
 
@@ -60,6 +62,67 @@ self.addEventListener('fetch', function(event) {
       });
     });
   }
+
+
+
+  self.addEventListener('sync', function(event) {
+    console.log('hello sync 1');
+    if (event.tag == 'sendPendingPost') {
+      console.log('hello sync');
+    event.waitUntil(
+      DBHelper.getAllReviewsDB('pendingPostsDB').then(function(reviews) {
+        if (!reviews || reviews.length==0) return;
+        // send the post data
+        console.log(reviews);
+        return Promise.all(reviews.map(function(review) {
+          // delete the review from idb and later try to post data
+          // if there is an error again, store in datbase.
+          DBHelper.sendPostRequest(review).then(DBHelper.removeReviewFromDB(review,'pendingPostsDB'));
+        }));
+      })
+    );
+    }
+  });
+
+/*
+  self.addEventListener('sync', function(event) {
+    console.log('hello');
+    event.waitUntil(
+      DBHelper.getAllReviewsDB('pendingPostsDB').then(function(reviews) {
+        if (!reviews || reviews.length==0) return;
+        // send the post data
+        console.log(reviews);
+        return Promise.all(reviews.map(function(review) {
+          // delete the review from idb and later try to post data
+          // if there is an error again, store in datbase.
+          DBHelper.sendPostRequest(review).then(DBHelper.removeReviewFromDB(review));
+        })).then(function(response) {
+          console.log(response);
+        });
+      })
+    );
+  });
+*/
+
+
+
+
+      /*
+      .then(function(reviews) {
+        if (!reviews || reviews.length==0) return;
+        // send the post data
+        return Promise.all(reviews.map(function(review) {
+          // delete the review from idb and later try to post data
+          // if there is an error again, store in datbase.
+          removeReviewFromDB(review).then(DBHelper.sendPostRequest(review));
+        }).then(function(response) {
+            console.log(response);
+          }).then(function(data) {
+            console.log(data.result);
+          })
+    }).catch(function(err) { console.error(err) });
+ )};
+*/
 
 
 

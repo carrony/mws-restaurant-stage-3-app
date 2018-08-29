@@ -12,26 +12,14 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
-  // /**
-  //  * Fetch all restaurants.
-  //  */
-  // static fetchRestaurants(callback) {
-  //   let xhr = new XMLHttpRequest();
-  //   xhr.open('GET', DBHelper.DATABASE_URL);
-  //   xhr.onload = () => {
-  //     if (xhr.status === 200) { // Got a success response from server!
-  //       const json = JSON.parse(xhr.responseText);
-  //       const restaurants = json.restaurants;
-  //       callback(null, restaurants);
-  //     } else { // Oops!. Got an error from server.
-  //       const error = (`Request failed. Returned status of ${xhr.status}`);
-  //       callback(error, null);
-  //     }
-  //   };
-  //   xhr.send();
-  // }
-
-
+  /**
+   * Database URL.
+   * For storing reviews
+   */
+  static get REVIEWS_URL() {
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/reviews/`;
+  }
 
   /**
    * Fetch all restaurants.
@@ -237,5 +225,120 @@ class DBHelper {
     );
     return marker;
   }
+
+
+  /**
+   * Stores a review in the selected dabatabase.
+   * Return a Promise with the state of the insert
+   */
+  static storeReviewsDB(reviews, database) {
+    const dbPromise = idb.open(database, 1, function(upgradeDb) {
+      upgradeDb.createObjectStore('reviews' , {
+        keyPath: 'name'
+      });
+    });
+
+    return dbPromise.then(function(db) {
+      var tx = db.transaction('reviews','readwrite');
+      var reviewsStore = tx.objectStore('reviews');
+      reviews.forEach(element => {
+        reviewsStore.put(element);
+      });
+    });
+  }
+
+  /**
+   * delete a review in the selected dabatabase.
+   * Return a Promise with the state of the delete
+   */
+  static removeReviewFromDB(review, database) {
+    const dbPromise = idb.open(database, 1, function(upgradeDb) {
+      upgradeDb.createObjectStore('reviews' , {
+        keyPath: 'name'
+      });
+    });
+
+    return dbPromise.then(function(db) {
+      console.log(database);
+      var tx = db.transaction('reviews','readwrite');
+      var reviewsStore = tx.objectStore('reviews');
+      reviewsStore.delete(review.name);
+    });
+  }
+
+  /**
+   * Retrieves a list of reviews in the selected dabatabase.
+   * Return a Promise with the reviews
+   */
+  static getAllReviewsDB(database) {
+    const dbPromise = idb.open(database, 1, function(upgradeDb) {
+      upgradeDb.createObjectStore('reviews' , {
+        keyPath: 'name'
+      });
+    });
+
+    return dbPromise.then(function(db) {
+      var tx = db.transaction('reviews');
+      var reviewsStore = tx.objectStore('reviews');
+      return reviewsStore.getAll();
+    })
+  }
+
+  /**
+   * Send post request for adding review to a server
+   */
+  static sendPostRequest(review) {
+    return fetch(DBHelper.REVIEWS_URL, {
+      method: 'POST',
+      body: JSON.stringify(review)
+    })
+    .catch(function(error) {
+      // Error fetching post request, no network, schedule the send
+      // storing it in idb
+      const reviews = [];
+      reviews.push(review);
+      console.log("database");
+      return DBHelper.storeReviewsDB(reviews, 'pendingPostsDB');
+    });
+  }
+
+  /**
+   * Delete a review from server throught delete request
+   * handy fetch("http://localhost:1337/reviews/53", {method: 'DELETE'}).then(resp=>console.log(resp)).catch(err=>console.log(err));
+   */
+  static deleteReview(review){
+    if (review.id)
+      return fetch((`${DBHelper.REVIEWS_URL}${review.id}`, {method: 'DELETE'}));
+    return // TODO delete from page and IDB pendingPostsDB
+  }
+
+
+  /**
+   * Fetch all reviews for a restuarant.
+   */
+  static fetchReviewsById(id, callback) {
+
+    // Fetching reviews from network
+    fetch(`${DBHelper.REVIEWS_URL}?restaurant_id=${id}`)
+      .then(response=>response.json())
+      .then(function (reviews) {
+        //storing it in idb database
+        DBHelper.storeReviewsDB(reviews, 'reviews')
+        .then(callback(null,reviews))
+        .catch(error => callback(error,null));
+      })
+      .catch(function (error) {
+        // Offline mode or network error
+        //recover from idb database if we could
+        DBHelper.getAllReviewsDB('reviews')
+        .then (function (reviews) {
+          // Or review database is empty or returns data
+          callback(null,reviews);
+        }).catch(function(error) {
+          // Error retrieving from db
+          callback(error,null);
+        })
+      });
+    }
 
 }

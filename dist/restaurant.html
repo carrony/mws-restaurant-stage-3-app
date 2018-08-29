@@ -62,23 +62,23 @@
 
       <div id="form-container">
         <h3>Add yor own Review!</h3>
-        <form method="POST" action="">
+        <form id="reviews-form" method="post" action="#">
             <input type="hidden" aria-hidden="true" name="restaurant_id" id="restaurant_id">
           <ul>
             <li>
               <label for="name"> Name: </label>
-              <input type="text" name="name" aria-label="Introduce your name:">
+              <input type="text" name="name" id="name" aria-label="Introduce your name:">
             </li>
             <li>
                 <label for="rating"> Rating: </label>
-                <input type="number" name="rating" aria-label="Rate it:">
+                <input type="number" name="rating" id="rating" aria-label="Rate it:">
             </li>
             <li>
                 <label for="comments"> Comments: </label>
-                <input type="textarea" name="comments" aria-label="Introduce your comments:">
+                <input type="textarea" name="comments" id="comments" aria-label="Introduce your comments:">
             </li>
             <li>
-                <input type="submit" type="submit" class="form-button" value="Grab Your review!" aria-label="Grab Your review!">
+                <button aria-label="Grab Your review!" id="submit-review" class="form-button">Grab Your review!</button>
             </li>
           </ul>
 

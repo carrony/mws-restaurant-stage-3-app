@@ -1,4 +1,5 @@
 let restaurant;
+let reviews;
 var map;
 
 /**
@@ -16,6 +17,12 @@ window.initMap = () => {
       });
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+    }
+  });
+
+  fetchReviewsFromURL((error,reviews) => {
+    if (error) {
+      console.log(error);
     }
   });
 }
@@ -77,8 +84,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
+
+  //handler form
+  handleReviewsForm();
 }
 
 /**
@@ -112,10 +120,37 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
+
+/**
+ * Get reviews for current restaurant from page URL.
+ */
+fetchReviewsFromURL = (callback) => {
+  if (self.reviews) { // reviews already fetched!
+    callback(null, self.reviews)
+    return;
+  }
+  const id = getParameterByName('id');
+  if (!id) { // no id found in URL
+    error = 'No restaurant id in URL'
+    callback(error, null);
+  } else {
+    DBHelper.fetchReviewsById(id, (error, reviews) => {
+      self.reviews = reviews;
+      if (!reviews) {
+        console.log(error);
+        return;
+      }
+      // fill reviews
+      fillReviewsHTML();
+      callback(null, self.reviews)
+    });
+  }
+}
+
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -123,6 +158,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   if (!reviews) {
     const noReviews = document.createElement('p');
+    noReviews.className='no-data';
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
     return;
@@ -132,6 +168,18 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
+}
+
+// Adding the new review waiting their post to server for include it in
+// reviews database
+addNewReview = (review) => {
+  const container = document.getElementById('reviews-container');
+  const noDataP = document.querySelector('.no-data');
+
+  // Remove the no reviews yet messages!
+  if (noDataP) container.removeChild(noDataP);
+  const ul = document.getElementById('reviews-list');
+  ul.appendChild(createReviewHTML(review));
 }
 
 /**
@@ -151,10 +199,16 @@ createReviewHTML = (review) => {
   // Append in header
   header.appendChild(name);
 
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
+  const createdAt = document.createElement('p');
+  createdAt.innerHTML = timeFormatter(review.createdAt);
   // Append in header
-  header.appendChild(date);
+  header.appendChild(createdAt);
+
+  const updatedAt = document.createElement('p');
+  updatedAt.innerHTML = timeFormatter(review.updatedAt);
+  // Append in header
+  header.appendChild(updatedAt);
+
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
@@ -167,6 +221,16 @@ createReviewHTML = (review) => {
   li.appendChild(comments);
 
   return li;
+}
+
+
+timeFormatter = time => {
+  const date = new Date(time);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
 }
 
 /**
@@ -193,4 +257,44 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+
+
+/**
+ * Handle form for creating reviews
+ */
+handleReviewsForm = (restaurant = self.restaurant) => {
+  const form = document.getElementById('reviews-form');
+
+  form.addEventListener('submit', function (event) {
+    // Prevent the send of the form
+    //debugger;
+    event.preventDefault();
+
+    //retrieve the values of the submitted review
+    const name = document.getElementById('name');
+    const rating = parseInt(document.getElementById('rating'));
+    const comments = document.getElementById('comments');
+
+    // Creating an object with information of the review to store in
+    // indexedDB
+    const review = {
+      "restaurant_id": restaurant.id,
+      "name": name.value,
+      "rating": rating.value,
+      "comments": comments.value
+    }
+
+    // adding review to page, first adding dates
+    if (!review.createdAt) review.createdAt=new Date().getTime();
+    if (!review.updatedAt) review.updatedAt=new Date().getTime();
+    addNewReview(review);
+    DBHelper.sendPostRequest(review).catch(error=>console.log(error));
+
+    name.value='';
+    rating.value=1;
+    comments.value='';
+
+  });
 }

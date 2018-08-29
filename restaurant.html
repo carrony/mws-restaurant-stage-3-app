@@ -48,6 +48,7 @@
     <section id="restaurant-container" tabindex="-1">
       <h2 id="restaurant-name"></h2>
       <img id="restaurant-img">
+      <p id="favourite" class="nofav" aria-label="mark as favourite"> </p>
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
       <a href="#reviews-container" class="skip-link" >Skip opening timeteable hours</a>
@@ -71,7 +72,7 @@
             </li>
             <li>
                 <label for="rating"> Rating: </label>
-                <input type="number" name="rating" id="rating" aria-label="Rate it:">
+                <input type="number" name="rating" id="rating" aria-label="Rate it:"  min="1" max="5" value="3" step="1">
             </li>
             <li>
                 <label for="comments"> Comments: </label>

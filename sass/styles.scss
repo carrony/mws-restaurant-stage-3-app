@@ -252,6 +252,29 @@ nav h1 a {
   text-transform: uppercase;
 }
 
+
+#favourite {
+  width: 80px;
+  height: 80px;
+  float: right;
+  background-repeat: no-repeat;
+}
+
+#favourite:hover {
+  background: url(../img/favouritehover.svg);
+  background-repeat: no-repeat;
+}
+.nofav {
+
+  background: url(../img/nofavourite.svg);
+  background-repeat: no-repeat;
+}
+
+.fav {
+  background: url(../img/favourite.svg);
+  background-repeat: no-repeat;
+}
+
 /* TODO: Add a style for the hover anchors for accebility reasons */
 /* ====================== Restaurant Details ====================== */
 .inside header {

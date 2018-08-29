@@ -21,6 +21,7 @@ class DBHelper {
     return `http://localhost:${port}/reviews/`;
   }
 
+
   /**
    * Fetch all restaurants.
    */
@@ -301,6 +302,50 @@ class DBHelper {
       return DBHelper.storeReviewsDB(reviews, 'pendingPostsDB');
     });
   }
+
+  /**
+   * Toggle favourite to true in a restaurant
+   */
+  static addToFavorites(id) {
+    const url = `${DBHelper.DATABASE_URL}/${id}/?is_favorite=true`;
+    fetch(url, { method: 'PUT' }).then(()=>{
+      console.log('updated');
+      this.updateRestaurant(id,"true");
+    }).catch(error=>console.log(error));
+  }
+
+  /**
+   * Toggle favourite to false in a restaurant
+   */
+  static removeFromFavorites(id) {
+    const url = `${DBHelper.DATABASE_URL}/${id}/?is_favorite=false`;
+    fetch(url, { method: 'PUT' }).then(()=>{
+      console.log('updated');
+      this.updateRestaurant(id,"false");
+    }).catch(error=>console.log(error));
+  }
+
+  /**
+     * Stores a review in the selected dabatabase.
+     * Return a Promise with the state of the insert
+     */
+    static updateRestaurant(id,value) {
+      const dbPromise = idb.open('restauntsDB', 1, function(upgradeDb) {
+        upgradeDb.createObjectStore('restaurants' , {
+          keyPath: 'id'
+        });
+      });
+
+      return dbPromise.then(function(db) {
+        var tx = db.transaction('restaurants','readwrite');
+        var restaurantStore = tx.objectStore('restaurants');
+        restaurantStore.get(id).then( restaurant => {
+          restaurant.is_favorite=value;
+          restaurantStore.put(restaurant)
+        })
+      });
+    }
+
 
   /**
    * Delete a review from server throught delete request

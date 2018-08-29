@@ -32,7 +32,7 @@ const copyHTML = () => {
 };
 
 const copyLogo = () => {
-    return gulp.src('./img-src/icon.svg')
+    return gulp.src('./img-src/*.svg')
         .pipe(gulp.dest('./dist/img'));
 };
 

@@ -60,6 +60,12 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   name.innerHTML = restaurant.name;
   name.tabIndex=0;
 
+  const favButton = document.getElementById('favourite');
+  if(restaurant.is_favorite=="true") {
+    favButton.classList.toggle('fav');
+    favButton.classList.toggle('nofav');
+  }
+
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
   address.tabIndex=0;
@@ -87,6 +93,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   //handler form
   handleReviewsForm();
+
+  // fav handler
+  handleFavourite();
 }
 
 /**
@@ -297,4 +306,18 @@ handleReviewsForm = (restaurant = self.restaurant) => {
     comments.value='';
 
   });
+}
+
+handleFavourite = (restaurant = self.restaurant) => {
+  const favButton = document.getElementById('favourite');
+  favButton.addEventListener('click', function (event) {
+    favButton.classList.toggle('fav');
+    favButton.classList.toggle('nofav');
+    if (restaurant.is_favorite) {
+      DBHelper.addToFavorites(restaurant.id)
+    } else {
+      DBHelper.removeFromFavorites(restaurant.id);
+    }
+  });
+
 }

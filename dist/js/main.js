@@ -4,12 +4,50 @@ let restaurants,
 var map
 var markers = []
 
+const imageAlts = {
+  1: "A view of the restaurant room, a lot of people sitting doown",
+	2: "Beautifl view of a enormeous pizza.",
+	3: "View the restaurant with grill on tables for cooking",
+	4: "The corner of the restauran with a lot lights",
+	5: "People eating in restaurant while staff preparing food behind",
+	6: "Crowded restaurant with an american flag on the wall",
+	7: "Two men walking a dog in front of restaurant.",
+	8: "The Dutch outside wall with their logo",
+	9: "Black and white picture of people eating with chopsticks.",
+	10: "View of this very fashioned restaurant."
+}
+
+observer = (entries) => {
+  entries.forEach(entry=>{
+    console.log('Obvserving');
+    console.log(entry.target.dataset.src);
+    if (!entry.isIntersecting) return;
+    entry.target.src = entry.target.dataset.src;
+    entry.target.srcset = entry.target.dataset.srcset;
+   // entry.target.sizes = entry.target.dataset.sizes;
+    intersectObs.unobserve(entry.target)
+    //console.log(entry.target);
+  });
+}
+
+//Implement intersecction observer for defer image loading
+const intersectObs = new IntersectionObserver(observer);
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
+  updateRestaurants();
+  //adding a listener for show the map
+  const showButton = document.getElementById('showMap');
+  showButton.addEventListener('click', function (event) {
+    const mapDiv = document.getElementById('map');
+    mapDiv.classList.toggle('hidden');
+    showButton.classList.toggle('hidden');
+  });
+
 });
 
 /**
@@ -49,6 +87,7 @@ fetchCuisines = () => {
     } else {
       self.cuisines = cuisines;
       fillCuisinesHTML();
+      initMap();
     }
   });
 }
@@ -143,12 +182,13 @@ createRestaurantHTML = (restaurant) => {
   image.className = 'restaurant-img';
 
   //ADding Accesibility attributes
-  image.alt=restaurant.photograph_alt;
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.srcset = DBHelper.imagesSrcsetForRestaurant(restaurant);
+  image.alt=imageAlts[restaurant.id];
+  image.dataset.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.dataset.srcset = DBHelper.imagesSrcsetForRestaurant(restaurant);
   // Adding sizes behaviour with media queries.
   image.sizes=DBHelper.imageSizesForRestaurant(restaurant);
   li.append(image);
+  intersectObs.observe(image);
 
   // The element must be h2, h1 is for the name of the webpage
   const name = document.createElement('h2');
@@ -185,3 +225,4 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+

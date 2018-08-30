@@ -65,10 +65,10 @@ self.addEventListener('fetch', function(event) {
 
 
 
-  self.addEventListener('sync', function(event) {
-    console.log('hello sync 1');
-    if (event.tag == 'sendPendingPost') {
-      console.log('hello sync');
+  self.addEventListener('message', function(event) {
+    console.log('online 1');
+    //if (event.tag == 'sendPendingPost') {
+      console.log('online 2');
     event.waitUntil(
       DBHelper.getAllReviewsDB('pendingPostsDB').then(function(reviews) {
         if (!reviews || reviews.length==0) return;
@@ -81,7 +81,7 @@ self.addEventListener('fetch', function(event) {
         }));
       })
     );
-    }
+    //}
   });
 
 /*

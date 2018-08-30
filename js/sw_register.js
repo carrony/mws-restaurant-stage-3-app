@@ -13,6 +13,31 @@ if (navigator.serviceWorker) {
         return swRegistration.sync.register('sendPendingPost');
       });
 
+    window.addEventListener('online', function () {
+        navigator.serviceWorker.controller.postMessage('online');
+        console.log("online");
+    })
+
+    /*navigator.serviceWorker.addEventListener('message', function(event) {
+        console.log(`Mensaje: ${eventa.data}`);
+    })*/
+
+   /* window.addEventListener('load', function() {
+        var status = document.getElementById("status");
+        var log = document.getElementById("log");
+
+        function updateOnlineStatus(event) {
+          var condition = navigator.onLine ? "online" : "offline";
+
+          status.className = condition;
+          status.innerHTML = condition.toUpperCase();
+
+          log.insertAdjacentHTML("beforeend", "Event: " + event.type + "; Status: " + condition);
+        }
+
+        window.addEventListener('online',  updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+      });*/
 }
 
 

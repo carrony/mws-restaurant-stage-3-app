@@ -283,7 +283,7 @@ handleReviewsForm = (restaurant = self.restaurant) => {
 
     //retrieve the values of the submitted review
     const name = document.getElementById('name');
-    const rating = parseInt(document.getElementById('rating'));
+    const rating = document.getElementById('rating');
     const comments = document.getElementById('comments');
 
     // Creating an object with information of the review to store in
@@ -291,7 +291,7 @@ handleReviewsForm = (restaurant = self.restaurant) => {
     const review = {
       "restaurant_id": restaurant.id,
       "name": name.value,
-      "rating": rating.value,
+      "rating": parseInt(rating.value),
       "comments": comments.value
     }
 

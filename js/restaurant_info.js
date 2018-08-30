@@ -61,7 +61,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   name.tabIndex=0;
 
   const favButton = document.getElementById('favourite');
-  if(restaurant.is_favorite=="true") {
+  if (restaurant.is_favorite==='true' || restaurant.is_favorite===true)  {
     favButton.classList.toggle('fav');
     favButton.classList.toggle('nofav');
   }
@@ -313,11 +313,12 @@ handleFavourite = (restaurant = self.restaurant) => {
   favButton.addEventListener('click', function (event) {
     favButton.classList.toggle('fav');
     favButton.classList.toggle('nofav');
-    if (restaurant.is_favorite) {
+    DBHelper.updateRestaurantFav(restaurant.id);
+   /* if (restaurant.is_favorite) {
       DBHelper.addToFavorites(restaurant.id)
     } else {
       DBHelper.removeFromFavorites(restaurant.id);
-    }
+    }*/
   });
 
 }

@@ -303,25 +303,10 @@ class DBHelper {
     });
   }
 
-  /**
-   * Toggle favourite to true in a restaurant
-   */
-  static addToFavorites(id) {
-    const url = `${DBHelper.DATABASE_URL}/${id}/?is_favorite=true`;
+  static changeFavoriteStatus(id, favorite) {
+    const url = `${DBHelper.DATABASE_URL}/${id}/?is_favorite=${favorite}`;
     fetch(url, { method: 'PUT' }).then(()=>{
       console.log('updated');
-      this.updateRestaurant(id,"true");
-    }).catch(error=>console.log(error));
-  }
-
-  /**
-   * Toggle favourite to false in a restaurant
-   */
-  static removeFromFavorites(id) {
-    const url = `${DBHelper.DATABASE_URL}/${id}/?is_favorite=false`;
-    fetch(url, { method: 'PUT' }).then(()=>{
-      console.log('updated');
-      this.updateRestaurant(id,"false");
     }).catch(error=>console.log(error));
   }
 
@@ -329,7 +314,7 @@ class DBHelper {
      * Stores a review in the selected dabatabase.
      * Return a Promise with the state of the insert
      */
-    static updateRestaurant(id,value) {
+    static updateRestaurantFav(id) {
       const dbPromise = idb.open('restauntsDB', 1, function(upgradeDb) {
         upgradeDb.createObjectStore('restaurants' , {
           keyPath: 'id'
@@ -340,8 +325,10 @@ class DBHelper {
         var tx = db.transaction('restaurants','readwrite');
         var restaurantStore = tx.objectStore('restaurants');
         restaurantStore.get(id).then( restaurant => {
-          restaurant.is_favorite=value;
-          restaurantStore.put(restaurant)
+          restaurant.is_favorite=(restaurant.is_favorite==='true' || restaurant.is_favorite===true)?true:false;
+          restaurant.is_favorite=!restaurant.is_favorite;
+          restaurantStore.put(restaurant);
+          DBHelper.changeFavoriteStatus(id,restaurant.is_favorite)
         })
       });
     }
